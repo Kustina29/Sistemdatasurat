@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SuratMasuk extends Model
+class SuratKeluar extends Model
 {
     use HasFactory;
 
-    protected $table = 'surat_masuk';
+    protected $table = 'surat_keluar';
 
     protected $fillable = [
-        'tanggal_masuk_surat',
+        'tanggal_keluar_surat',
         'nomor_urut',
-        'alamat_pengirim',
+        'alamat_penerima',
         'tanggal_surat',
         'nomor_surat',
         'perihal',
-        'tujuan_disposisi',
+        'asal',
         'lampiran_path',
         'lampiran_nama_asli',
         'lampiran_mime',

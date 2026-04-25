@@ -8,24 +8,37 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use Carbon\Carbon;
 
-class SuratMasukExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
+class SuratMasukExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithTitle, ShouldAutoSize
 {
     protected $bulan;
     protected $tahun;
+    protected $search;
 
-    public function __construct($bulan, $tahun)
+    public function __construct($bulan, $tahun, $search = null)
     {
         $this->bulan = $bulan;
         $this->tahun = $tahun;
+        $this->search = $search;
     }
 
     public function collection()
     {
         $query = SuratMasuk::query();
+        if ($this->search) {
+            $query->where(function ($q) {
+                $q->where('perihal', 'like', '%' . $this->search . '%')
+                  ->orWhere('nomor_surat', 'like', '%' . $this->search . '%')
+                  ->orWhere('nomor_urut', 'like', '%' . $this->search . '%')
+                  ->orWhere('tujuan_disposisi', 'like', '%' . $this->search . '%')
+                  ->orWhere('alamat_pengirim', 'like', '%' . $this->search . '%');
+            });
+        }
         if ($this->bulan != 'all') {
             $query->whereMonth('tanggal_masuk_surat', $this->bulan);
         }
@@ -66,6 +79,13 @@ class SuratMasukExport implements FromCollection, WithHeadings, WithMapping, Wit
 
     public function styles(Worksheet $sheet)
     {
+        $sheet->setTitle($this->title());
+        $sheet->getPageSetup()
+            ->setOrientation(PageSetup::ORIENTATION_LANDSCAPE)
+            ->setPaperSize(PageSetup::PAPERSIZE_A4)
+            ->setFitToWidth(1)
+            ->setFitToHeight(0);
+
         // ------------------
         // Style untuk Judul Konstan (Baris 1 & 2)
         // ------------------
@@ -101,6 +121,7 @@ class SuratMasukExport implements FromCollection, WithHeadings, WithMapping, Wit
         $sheet->mergeCells('C4:C5');
         $sheet->mergeCells('D4:F4');
         $sheet->mergeCells('G4:G5');
+        $sheet->freezePane('A6');
 
         $sheet->getStyle('A4:G5')->applyFromArray([
             'font' => [
@@ -138,6 +159,7 @@ class SuratMasukExport implements FromCollection, WithHeadings, WithMapping, Wit
                 ],
                 'alignment' => [
                     'vertical' => Alignment::VERTICAL_CENTER,
+                    'wrapText' => true,
                 ]
             ]);
         }
@@ -149,5 +171,10 @@ class SuratMasukExport implements FromCollection, WithHeadings, WithMapping, Wit
         $sheet->getRowDimension('5')->setRowHeight(20);
 
         return [];
+    }
+
+    public function title(): string
+    {
+        return 'Surat Masuk';
     }
 }
