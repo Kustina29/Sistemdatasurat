@@ -11,13 +11,16 @@ async function getOcrWorker(onProgress) {
     if (!ocrWorker) {
         ocrWorker = await createWorker('ind+eng', 1, {
             workerPath: assetUrl('tesseract/worker.min.js'),
-            corePath: assetUrl('tesseract/tesseract-core-simd-lstm.wasm.js'),
+            corePath: assetUrl('tesseract'),
             langPath: assetUrl('tessdata'),
             gzip: true,
             logger: (message) => {
                 if (typeof onProgress === 'function') {
                     onProgress(message);
                 }
+            },
+            errorHandler: (error) => {
+                console.error('SIPAS OCR worker error:', error);
             },
         });
     }

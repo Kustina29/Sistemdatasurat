@@ -566,7 +566,9 @@
             parseLetter(text);
             setStatus('Pemindaian selesai! Field yang berhasil dideteksi telah diisi otomatis. Mohon periksa kembali.');
         } catch (error) {
-            setStatus('Gagal membaca dokumen. Pastikan gambar tidak buram dan teks dapat dibaca jelas.');
+            console.error('SIPAS OCR failed:', error);
+            const detail = error?.message || String(error);
+            setStatus(`Gagal membaca dokumen: ${detail}. Pastikan file berupa gambar yang jelas, lalu coba lagi.`);
         } finally {
             scanButton.disabled = false;
             scanButton.innerHTML = originalText;
