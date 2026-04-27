@@ -14,24 +14,12 @@
     <script type="module">
         import * as Turbo from 'https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.4/dist/turbo.es2017-esm.js';
     </script>
-    @php
-        $viteManifestPath = public_path('build/manifest.json');
-        $viteManifest = file_exists($viteManifestPath) ? json_decode(file_get_contents($viteManifestPath), true) : [];
-        $viteEntry = $viteManifest['resources/js/app.js'] ?? null;
-    @endphp
     <script>
         window.SipasConfig = {
             assetBase: @json(rtrim(asset(''), '/')),
         };
     </script>
-    @if($viteEntry)
-        @isset($viteEntry['css'])
-            @foreach($viteEntry['css'] as $cssFile)
-                <link rel="stylesheet" href="{{ asset('build/'.$cssFile) }}">
-            @endforeach
-        @endisset
-        <script type="module" src="{{ asset('build/'.$viteEntry['file']) }}"></script>
-    @endif
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         /* Custom Scrollbar for Sidebar */
