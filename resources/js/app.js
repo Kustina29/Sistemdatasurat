@@ -4,9 +4,7 @@ import { createWorker } from 'tesseract.js';
 let ocrWorker;
 
 function assetUrl(path) {
-    const base = window.SipasConfig?.assetBase || window.location.origin;
-
-    return `${base}/${path.replace(/^\/+/, '')}`;
+    return new URL(`/${path.replace(/^\/+/, '')}`, window.location.origin).toString();
 }
 
 async function getOcrWorker(onProgress) {
