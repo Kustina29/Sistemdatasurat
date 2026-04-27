@@ -114,9 +114,9 @@
         @endisset
 
         <!-- Upload New -->
-        <div>
-            <p class="text-sm font-semibold text-slate-900">1. Pilih sumber dokumen</p>
-            <p class="mt-1 text-xs text-slate-500">Gunakan salah satu: upload file yang sudah ada atau ambil foto langsung dari kamera.</p>
+        <div id="uploadActionContainer">
+            <p class="text-sm font-semibold text-slate-900">Sumber Dokumen</p>
+            <p class="mt-1 text-xs text-slate-500">Pilih file yang sudah ada atau ambil foto langsung dari kamera.</p>
             @isset($surat_keluar)
                 @if($surat_keluar->lampiran_path)
                     <p class="mt-3 text-xs font-semibold text-slate-500">
@@ -124,9 +124,10 @@
                     </p>
                 @endif
             @endisset
-            <div class="mt-3 grid gap-3">
-                <label for="lampiran" class="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 hover:border-indigo-300 hover:bg-indigo-50/60 transition-colors">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-indigo-600 ring-1 ring-slate-200">
+            
+            <div id="uploadButtons" class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <label for="lampiran" class="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 hover:border-indigo-300 hover:bg-indigo-50/60 transition-colors group">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-indigo-600 ring-1 ring-slate-200 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5h10.5A2.25 2.25 0 0019.5 17.25V6.75A2.25 2.25 0 0017.25 4.5H6.75A2.25 2.25 0 004.5 6.75v10.5A2.25 2.25 0 006.75 19.5z" /></svg>
                     </span>
                     <span class="min-w-0">
@@ -137,36 +138,51 @@
                     Pilih File
                 @endisset
                         </span>
-                        <span class="block text-xs text-slate-500">PDF, JPG, PNG, WEBP sampai 10 MB</span>
+                        <span class="block text-xs text-slate-500">PDF, JPG, PNG sampai 10MB</span>
                     </span>
                     <input id="lampiran" name="lampiran" type="file" class="sr-only" accept=".pdf,image/jpeg,image/png,image/webp">
                 </label>
-                <button type="button" id="cameraButton" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left hover:border-indigo-300 hover:bg-slate-50 transition-colors">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                <button type="button" id="cameraButton" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left hover:border-indigo-300 hover:bg-slate-50 transition-colors group">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 019.186 4.5h5.628a2.31 2.31 0 012.36 1.675l.183.642A2.25 2.25 0 0019.52 8.5h.23A2.25 2.25 0 0122 10.75v7A2.25 2.25 0 0119.75 20h-15A2.25 2.25 0 012.5 17.75v-7A2.25 2.25 0 014.75 8.5h.23a2.25 2.25 0 002.163-1.683l.184-.642z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 13.25a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
                     </span>
                     <span>
                         <span class="block text-sm font-bold text-slate-800">Ambil Foto</span>
-                        <span class="block text-xs text-slate-500">Foto langsung menjadi file scan surat</span>
+                        <span class="block text-xs text-slate-500">Scan dokumen pakai kamera</span>
                     </span>
                 </button>
-                <div id="selectedFilePanel" class="hidden rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3">
-                    <p class="text-xs font-bold uppercase tracking-wide text-emerald-700">Dokumen siap disimpan</p>
-                    <p id="selectedFileName" class="mt-0.5 truncate text-sm font-semibold text-slate-800"></p>
-                </div>
             </div>
 
-            <div class="mt-5 rounded-xl border border-indigo-100 bg-indigo-50 p-4">
-                <p class="text-sm font-semibold text-slate-900">2. Pindai isi gambar <span class="font-normal text-slate-500">(opsional)</span></p>
-                <p class="mt-1 text-xs text-slate-600">Dipakai hanya jika dokumen berupa foto/gambar. PDF tetap bisa langsung disimpan sebagai lampiran.</p>
-                <button type="button" id="scanButton" class="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-3 py-2.5 text-xs font-bold text-white hover:bg-indigo-500 transition-colors shadow-sm">
-                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" /></svg>
-                        Pindai Isi Gambar
-                    </button>
+            <!-- Selected File Card -->
+            <div id="selectedFilePanel" class="hidden mt-4 rounded-xl border-2 border-indigo-500 bg-indigo-50/80 p-4 relative overflow-hidden transition-all duration-300 shadow-md shadow-indigo-500/10">
+                <div class="absolute top-0 right-0 bg-indigo-500 text-white rounded-bl-xl px-3 py-1 text-[10px] font-bold uppercase tracking-wider">
+                    Siap Diproses
+                </div>
+                <div class="flex items-start gap-4 mt-2">
+                    <!-- Thumbnail -->
+                    <div class="flex-shrink-0 h-16 w-16 bg-white rounded-lg flex items-center justify-center border border-indigo-200 overflow-hidden shadow-sm">
+                         <img id="fileThumbnail" class="h-full w-full object-cover hidden" alt="Thumbnail">
+                         <svg id="fileIcon" class="h-8 w-8 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                    </div>
+                    <div class="flex-1 min-w-0 pr-2">
+                        <p id="selectedFileName" class="truncate text-sm font-bold text-slate-900"></p>
+                        <p class="mt-1 text-[11px] text-slate-600 leading-relaxed">Pindai dengan AI untuk mengisi form otomatis atau langsung Simpan Data.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t border-indigo-200/60 flex flex-col gap-2">
+                     <button type="button" id="scanButton" class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-bold text-white hover:bg-indigo-500 transition-colors shadow-sm focus:ring-4 focus:ring-indigo-500/20">
+                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" /></svg>
+                         Pindai Data Gambar (AI)
+                     </button>
+                     <button type="button" id="resetFileButton" class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-50 border border-slate-200 transition-colors">
+                        Hapus & Pilih Ulang
+                     </button>
+                </div>
             </div>
             
             <!-- OCR Status -->
-            <div id="ocr_status" class="mt-3 hidden rounded-lg border border-indigo-100 bg-indigo-50/50 p-3 text-xs font-medium text-indigo-700"></div>
+            <div id="ocr_status" class="mt-3 hidden rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs font-medium text-amber-800 shadow-sm animate-pulse"></div>
             <textarea id="ocr_text" class="mt-3 hidden w-full rounded-lg border-0 bg-slate-50 p-3 text-xs text-slate-600 ring-1 ring-inset ring-slate-200" rows="3" readonly></textarea>
         </div>
 
@@ -195,24 +211,74 @@
     </div>
 </div>
 
-<div id="cameraModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/70 px-4 backdrop-blur-sm">
-    <div class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl">
-        <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
-            <div>
-                <h2 class="text-base font-bold text-slate-900">Ambil Foto Surat</h2>
-                <p class="text-sm text-slate-500">Foto akan masuk ke File Scan Surat dan bisa langsung disimpan.</p>
+<div id="cameraModal" class="fixed inset-0 z-[100] hidden flex-col bg-black h-[100dvh] w-screen">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-4 py-4 bg-gradient-to-b from-black/80 to-transparent absolute top-0 left-0 right-0 z-10">
+        <button type="button" id="cameraClose" class="rounded-full p-2 text-white hover:bg-white/20 transition-colors backdrop-blur-md">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+        </button>
+        <div class="text-center text-white">
+            <h2 class="text-sm font-bold tracking-wide">AMBIL FOTO SURAT</h2>
+            <p class="text-[10px] text-white/70 uppercase">Posisikan dokumen dalam bingkai</p>
+        </div>
+        <button type="button" id="cameraSwitch" class="rounded-full p-2 text-white hover:bg-white/20 transition-colors backdrop-blur-md" title="Balik Kamera">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+        </button>
+    </div>
+
+    <!-- Viewfinder Container -->
+    <div class="flex-1 relative overflow-hidden bg-black flex items-center justify-center">
+        <!-- Live Camera View -->
+        <video id="cameraVideo" class="h-full w-full object-cover" autoplay playsinline muted></video>
+        
+        <!-- Photo Preview (Hidden initially) -->
+        <img id="cameraPreviewImg" class="h-full w-full object-cover hidden" alt="Preview">
+
+        <!-- Scanner Overlay Guide -->
+        <div id="cameraGuide" class="absolute inset-0 pointer-events-none flex items-center justify-center p-6 sm:p-12">
+            <div class="w-full max-w-md aspect-[3/4] border-2 border-white/40 border-dashed rounded-2xl relative shadow-[0_0_0_4000px_rgba(0,0,0,0.7)]">
+                <!-- Corner marks -->
+                <div class="absolute top-0 left-0 w-8 h-8 sm:w-12 sm:h-12 border-t-4 border-l-4 border-indigo-400 -mt-0.5 -ml-0.5 rounded-tl-2xl"></div>
+                <div class="absolute top-0 right-0 w-8 h-8 sm:w-12 sm:h-12 border-t-4 border-r-4 border-indigo-400 -mt-0.5 -mr-0.5 rounded-tr-2xl"></div>
+                <div class="absolute bottom-0 left-0 w-8 h-8 sm:w-12 sm:h-12 border-b-4 border-l-4 border-indigo-400 -mb-0.5 -ml-0.5 rounded-bl-2xl"></div>
+                <div class="absolute bottom-0 right-0 w-8 h-8 sm:w-12 sm:h-12 border-b-4 border-r-4 border-indigo-400 -mb-0.5 -mr-0.5 rounded-br-2xl"></div>
             </div>
-            <button type="button" id="cameraClose" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100">
-                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+        </div>
+
+        <!-- Flash Effect -->
+        <div id="cameraFlash" class="absolute inset-0 bg-white opacity-0 pointer-events-none transition-opacity duration-200 z-50"></div>
+    </div>
+
+    <!-- Status Messages -->
+    <div class="absolute bottom-36 left-0 right-0 flex justify-center pointer-events-none z-20">
+        <p id="cameraStatus" class="hidden bg-black/70 backdrop-blur-md text-white text-xs px-4 py-2 rounded-full shadow-lg border border-white/10 mx-4 text-center"></p>
+    </div>
+
+    <!-- Bottom Controls Area -->
+    <div class="h-32 sm:h-40 bg-black flex items-center justify-center px-8 pb-6 pt-2 shrink-0 z-10 relative">
+        <!-- Camera Mode Controls -->
+        <div id="cameraControls" class="w-full flex items-center justify-center gap-12 max-w-md">
+            <!-- Shutter Button -->
+            <button type="button" id="cameraShutter" class="group relative flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center rounded-full bg-transparent border-[3px] border-white focus:outline-none active:scale-95 transition-all">
+                <div class="h-[68px] w-[68px] sm:h-[84px] sm:w-[84px] rounded-full bg-white group-active:bg-slate-200 transition-colors"></div>
             </button>
         </div>
-        <div class="p-5">
-            <video id="cameraVideo" class="aspect-video w-full rounded-xl bg-slate-900 object-cover" autoplay playsinline muted></video>
-            <p id="cameraStatus" class="mt-3 hidden rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800"></p>
-            <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-end">
-                <button type="button" id="cameraCancel" class="rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50">Batal</button>
-                <button type="button" id="cameraTake" class="rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500">Gunakan Foto</button>
-            </div>
+
+        <!-- Preview Mode Controls (Hidden initially) -->
+        <div id="previewControls" class="w-full flex items-center justify-between max-w-md hidden">
+            <button type="button" id="cameraRetake" class="flex flex-col items-center gap-1.5 text-white hover:text-slate-300 transition-colors">
+                <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                </div>
+                <span class="text-[11px] font-bold tracking-wide uppercase">Ulangi</span>
+            </button>
+
+            <button type="button" id="cameraAccept" class="flex flex-col items-center gap-1.5 text-white hover:text-emerald-300 transition-colors group">
+                <div class="h-16 w-16 rounded-full bg-emerald-500 group-hover:bg-emerald-400 flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all">
+                    <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                </div>
+                <span class="text-[11px] font-bold tracking-wide uppercase text-emerald-400">Gunakan Foto</span>
+            </button>
         </div>
     </div>
 </div>
@@ -228,11 +294,28 @@
     const cameraVideo = document.getElementById('cameraVideo');
     const cameraTake = document.getElementById('cameraTake');
     const cameraClose = document.getElementById('cameraClose');
-    const cameraCancel = document.getElementById('cameraCancel');
+    const cameraSwitch = document.getElementById('cameraSwitch');
     const cameraStatus = document.getElementById('cameraStatus');
+    const cameraShutter = document.getElementById('cameraShutter');
+    const cameraFlash = document.getElementById('cameraFlash');
+    const cameraPreviewImg = document.getElementById('cameraPreviewImg');
+    const cameraGuide = document.getElementById('cameraGuide');
+    const cameraControls = document.getElementById('cameraControls');
+    const previewControls = document.getElementById('previewControls');
+    const cameraRetake = document.getElementById('cameraRetake');
+    const cameraAccept = document.getElementById('cameraAccept');
     const selectedFilePanel = document.getElementById('selectedFilePanel');
     const selectedFileName = document.getElementById('selectedFileName');
+    
+    // New references for file preview & management
+    const fileThumbnail = document.getElementById('fileThumbnail');
+    const fileIcon = document.getElementById('fileIcon');
+    const uploadButtons = document.getElementById('uploadButtons');
+    const resetFileButton = document.getElementById('resetFileButton');
+    
     let cameraStream = null;
+    let currentFacingMode = 'environment';
+    let capturedBlob = null;
 
     const monthMap = {
         januari: '01', februari: '02', maret: '03', april: '04', mei: '05', juni: '06',
@@ -247,6 +330,7 @@
     function setCameraStatus(message) {
         cameraStatus.textContent = message;
         cameraStatus.classList.remove('hidden');
+        setTimeout(() => { cameraStatus.classList.add('hidden'); }, 3000);
     }
 
     function stopCamera() {
@@ -257,19 +341,35 @@
         if (cameraVideo) cameraVideo.srcObject = null;
     }
 
-    async function openCamera() {
+    async function openCamera(facingMode = 'environment') {
+        stopCamera();
+        currentFacingMode = facingMode;
+        
+        // Pindahkan modal langsung ke body agar lepas dari parent transform/animation yang bisa merusak `fixed inset-0`
+        if (cameraModal && cameraModal.parentNode !== document.body) {
+            document.body.appendChild(cameraModal);
+        }
+        
+        // Reset UI
+        cameraPreviewImg.classList.add('hidden');
+        cameraVideo.classList.remove('hidden');
+        cameraGuide.classList.remove('hidden');
+        cameraSwitch.classList.remove('hidden');
+        previewControls.classList.add('hidden');
+        cameraControls.classList.remove('hidden');
         cameraStatus.classList.add('hidden');
+        
         cameraModal.classList.remove('hidden');
         cameraModal.classList.add('flex');
 
         try {
             cameraStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: { ideal: 'environment' } },
+                video: { facingMode: { ideal: currentFacingMode } },
                 audio: false,
             });
             cameraVideo.srcObject = cameraStream;
         } catch (error) {
-            setCameraStatus('Kamera tidak bisa dibuka. Berikan izin kamera atau gunakan pilih file biasa.');
+            setCameraStatus('Kamera tidak bisa dibuka. Periksa izin kamera.');
         }
     }
 
@@ -277,6 +377,7 @@
         stopCamera();
         cameraModal.classList.add('hidden');
         cameraModal.classList.remove('flex');
+        capturedBlob = null;
     }
 
     function setLampiranFromBlob(blob, fileName) {
@@ -284,15 +385,52 @@
         const transfer = new DataTransfer();
         transfer.items.add(file);
         imageInput.files = transfer.files;
-        showSelectedFile(fileName);
-        setStatus('Foto kamera sudah masuk ke File Scan Surat. Klik Pindai Data Gambar untuk OCR atau langsung simpan data.');
+        showSelectedFile(fileName, blob);
     }
 
-    function showSelectedFile(fileName) {
+    function showSelectedFile(fileName, fileOrBlob) {
         if (!selectedFilePanel || !selectedFileName) return;
-        selectedFileName.textContent = fileName || '';
-        selectedFilePanel.classList.toggle('hidden', !fileName);
+        
+        if (fileName) {
+            selectedFileName.textContent = fileName;
+            selectedFilePanel.classList.remove('hidden');
+            if (uploadButtons) uploadButtons.classList.add('hidden');
+            
+            // Show thumbnail if it's an image
+            if (fileOrBlob && fileOrBlob.type.startsWith('image/')) {
+                const url = URL.createObjectURL(fileOrBlob);
+                if (fileThumbnail) {
+                    fileThumbnail.src = url;
+                    fileThumbnail.classList.remove('hidden');
+                }
+                if (fileIcon) fileIcon.classList.add('hidden');
+            } else {
+                if (fileThumbnail) fileThumbnail.classList.add('hidden');
+                if (fileIcon) fileIcon.classList.remove('hidden');
+            }
+
+            // Auto-scroll to panel on mobile
+            if (window.innerWidth < 1024) {
+                setTimeout(() => {
+                    selectedFilePanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 150);
+            }
+        } else {
+            selectedFilePanel.classList.add('hidden');
+            if (uploadButtons) uploadButtons.classList.remove('hidden');
+            if (fileThumbnail && fileThumbnail.src) {
+                URL.revokeObjectURL(fileThumbnail.src);
+                fileThumbnail.src = '';
+            }
+        }
     }
+
+    resetFileButton?.addEventListener('click', () => {
+        imageInput.value = '';
+        showSelectedFile('');
+        textBox.classList.add('hidden');
+        statusBox.classList.add('hidden');
+    });
 
     function normalizeDate(value) {
         if (!value) return '';
@@ -345,36 +483,80 @@
             setStatus('Browser tidak mendukung akses kamera langsung. Gunakan pilih file biasa.');
             return;
         }
-
-        openCamera();
+        openCamera('environment');
     });
 
     cameraClose?.addEventListener('click', closeCamera);
-    cameraCancel?.addEventListener('click', closeCamera);
+    
+    cameraSwitch?.addEventListener('click', () => {
+        const newMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+        openCamera(newMode);
+    });
 
-    cameraTake?.addEventListener('click', () => {
+    cameraShutter?.addEventListener('click', () => {
         if (!cameraStream) {
             setCameraStatus('Kamera belum siap.');
             return;
         }
 
+        // Flash Effect
+        cameraFlash.classList.remove('opacity-0');
+        cameraFlash.classList.add('opacity-100');
+        setTimeout(() => {
+            cameraFlash.classList.remove('opacity-100');
+            cameraFlash.classList.add('opacity-0');
+        }, 150);
+
+        // Capture Image
         const canvas = document.createElement('canvas');
         canvas.width = cameraVideo.videoWidth;
         canvas.height = cameraVideo.videoHeight;
-        canvas.getContext('2d').drawImage(cameraVideo, 0, 0, canvas.width, canvas.height);
+        
+        const ctx = canvas.getContext('2d');
+        if (currentFacingMode === 'user') {
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+        }
+        ctx.drawImage(cameraVideo, 0, 0, canvas.width, canvas.height);
+        
         canvas.toBlob((blob) => {
             if (!blob) {
                 setCameraStatus('Gagal mengambil foto. Coba ulangi.');
                 return;
             }
-
-            setLampiranFromBlob(blob, 'scan-surat-keluar.jpg');
-            closeCamera();
+            
+            capturedBlob = blob;
+            const imageUrl = URL.createObjectURL(blob);
+            cameraPreviewImg.src = imageUrl;
+            
+            // Switch UI to Preview Mode
+            stopCamera();
+            cameraVideo.classList.add('hidden');
+            cameraPreviewImg.classList.remove('hidden');
+            cameraGuide.classList.add('hidden');
+            cameraSwitch.classList.add('hidden');
+            cameraControls.classList.add('hidden');
+            previewControls.classList.remove('hidden');
+            
         }, 'image/jpeg', 0.92);
     });
 
+    cameraRetake?.addEventListener('click', () => {
+        if (cameraPreviewImg.src) {
+            URL.revokeObjectURL(cameraPreviewImg.src);
+        }
+        openCamera(currentFacingMode);
+    });
+
+    cameraAccept?.addEventListener('click', () => {
+        if (capturedBlob) {
+            setLampiranFromBlob(capturedBlob, 'scan-surat-keluar.jpg');
+            closeCamera();
+        }
+    });
+
     imageInput?.addEventListener('change', () => {
-        showSelectedFile(imageInput.files?.[0]?.name || '');
+        showSelectedFile(imageInput.files?.[0]?.name || '', imageInput.files?.[0]);
     });
 
     scanButton?.addEventListener('click', async () => {
